@@ -3,85 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>몽글몽글 장소 검색</title>
+    <title>🌿 파스텔 연초록 지도 서비스</title>
     <style>
-        /* CSS: 파스텔 감성 디자인 */
+        /* CSS: 파스텔 연초록 테마 설정 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body, html { 
-            width: 100%; height: 100%; 
-            font-family: 'Malgun Gothic', sans-serif; 
-            background-color: #fff9fb; /* 아주 연한 핑크빛 배경 */
-        }
+        body, html { width: 100%; height: 100%; font-family: 'Malgun Gothic', sans-serif; background-color: #f1f8e9; }
 
-        .container { display: flex; width: 100%; height: 100vh; padding: 15px; gap: 15px; }
+        .container { display: flex; width: 100%; height: 100vh; padding: 10px; gap: 10px; }
 
         /* 왼쪽 검색창 섹션 */
         .sidebar { 
-            width: 350px; height: 100%; 
-            background: white; 
-            border-radius: 25px; /* 둥글둥글한 모서리 */
-            box-shadow: 0 10px 20px rgba(255, 182, 193, 0.2); 
-            display: flex; flex-direction: column; 
-            overflow: hidden;
-            z-index: 10;
+            width: 380px; height: 100%; 
+            display: flex; flex-direction: column; z-index: 10; 
+            background: #ffffff; border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden;
         }
-
-        .search-box { 
-            padding: 25px; 
-            background: #fff0f5; /* 연보라빛 핑크 */
-            border-bottom: 2px solid #ffe4e1; 
-        }
-        
+        .search-box { padding: 25px 20px; background: #e8f5e9; border-bottom: 2px solid #c8e6c9; }
         .search-box input { 
-            width: 70%; padding: 12px; 
-            border: 2px solid #ffc0cb; 
-            border-radius: 15px; 
-            outline: none;
+            width: 70%; padding: 12px; border: 2px solid #a5d6a7; 
+            border-radius: 10px; outline: none; transition: 0.3s;
         }
-
+        .search-box input:focus { border-color: #66bb6a; box-shadow: 0 0 8px #a5d6a7; }
         .search-box button { 
-            width: 25%; padding: 12px; 
-            background: #ffb6c1; 
-            color: white; border: none; 
-            cursor: pointer; font-weight: bold; 
-            border-radius: 15px;
-            transition: 0.3s;
+            width: 25%; padding: 12px; background: #a5d6a7; color: white;
+            border: none; cursor: pointer; font-weight: bold; border-radius: 10px; margin-left: 5px;
         }
-
-        .search-box button:hover { background: #ff69b4; }
+        .search-box button:hover { background: #81c784; }
         
         /* 검색 결과 리스트 */
         #result-list { flex: 1; overflow-y: auto; list-style: none; padding: 10px; }
-        
-        /* 스크롤바 디자인 */
-        #result-list::-webkit-scrollbar { width: 6px; }
-        #result-list::-webkit-scrollbar-thumb { background: #ffdadf; border-radius: 10px; }
-
         .item { 
-            padding: 15px; margin-bottom: 10px;
-            border-radius: 15px;
-            background: #fff;
-            border: 1px solid #fff0f5;
-            transition: all 0.2s;
-            cursor: pointer; 
+            padding: 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer; 
+            border-radius: 15px; margin-bottom: 8px; transition: 0.2s;
         }
-
-        .item:hover { 
-            background: #fffafb; 
-            transform: translateY(-3px);
-            box-shadow: 0 5px 10px rgba(255, 182, 193, 0.3);
+        .item:hover { background: #f1f8e9; transform: scale(0.98); }
+        .item h5 { color: #2e7d32; margin-bottom: 5px; font-size: 16px; }
+        .item p { font-size: 13px; color: #666; }
+        .item .related-tag { 
+            display: inline-block; margin-top: 5px; padding: 2px 8px; 
+            background: #c8e6c9; color: #2e7d32; font-size: 11px; border-radius: 10px; 
         }
-
-        .item h5 { color: #ff69b4; margin-bottom: 5px; font-size: 16px; }
-        .item p { font-size: 13px; color: #888; }
 
         /* 오른쪽 지도 섹션 */
-        #map { 
-            flex: 1; height: 100%; 
-            border-radius: 25px; 
-            border: 3px solid #ffe4e1;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-        }
+        #map { flex: 1; height: 100%; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -89,7 +53,7 @@
     <div class="container">
         <div class="sidebar">
             <div class="search-box">
-                <input type="text" id="keyword" placeholder="어디로 갈까요? ✨" onkeypress="if(event.keyCode==13) searchPlaces()">
+                <input type="text" id="keyword" placeholder="어디로 갈까요? 🌿" onkeypress="if(event.keyCode==13) searchPlaces()">
                 <button onclick="searchPlaces()">검색</button>
             </div>
             <ul id="result-list">
@@ -99,47 +63,85 @@
         <div id="map"></div>
     </div>
 
-    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=4bd2ac501e95e7bc54cf1dfe0ee7563f&libraries=services"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4bd2ac501e95e7bc54cf1dfe0ee7563f&libraries=services"></script>
     
     <script>
         let map;
-        let ps;
-        let markers = [];
+        let ps; 
+        let markers = []; // 검색 결과 마커
+        let clickMarker; // 클릭 시 생성되는 마커
+
+        // 사용자가 원하는 마커 이미지 설정 (여기에 이미지 URL을 넣으세요)
+        const markerImageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png'; 
+        const imageSize = new kakao.maps.Size(24, 35); 
+        const markerImage = new kakao.maps.MarkerImage(markerImageSrc, imageSize);
 
         function initMap() {
             const container = document.getElementById('map');
             const options = {
-                center: new kakao.maps.LatLng(37.66, 126.83),
-                level: 5
+                center: new kakao.maps.LatLng(37.566826, 126.9786567),
+                level: 3
             };
 
             map = new kakao.maps.Map(container, options);
             ps = new kakao.maps.services.Places();
 
+            // 1. 현재 위치 가져오기
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-                    const locPosition = new kakao.maps.LatLng(lat, lon);
+                    const locPosition = new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude);
                     map.setCenter(locPosition);
                 });
             }
+
+            // 2. 지도 클릭 이벤트: 누른 장소에 마커 표시 기능
+            kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
+                addClickMarker(mouseEvent.latLng);
+            });
         }
 
+        // 지도 클릭 시 마커 표시 함수
+        function addClickMarker(position) {
+            if (clickMarker) clickMarker.setMap(null); // 기존 클릭 마커 제거
+            
+            clickMarker = new kakao.maps.Marker({
+                position: position,
+                image: markerImage // 설정한 커스텀 이미지 적용
+            });
+            clickMarker.setMap(map);
+        }
+
+        // 장소 검색
         function searchPlaces() {
             const keyword = document.getElementById('keyword').value;
-            if (!keyword.trim()) {
-                alert('검색어를 입력해 주세요! 🌸');
+            if (!keyword.replace(/^\s+|\s+$/g, '')) {
+                alert('검색어를 입력해주세요!');
                 return false;
             }
+            // 검색 시 연관 장소 추천을 위해 키워드로 검색 실행
             ps.keywordSearch(keyword, placesSearchCB);
         }
 
-        function placesSearchCB(data, status) {
+        function placesSearchCB(data, status, pagination) {
             if (status === kakao.maps.services.Status.OK) {
                 displayPlaces(data);
+                // 첫 번째 검색 결과의 카테고리를 기준으로 연관 장소(주변 편의시설 등) 추가 검색
+                searchRelated(data[0]);
             } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-                alert('검색 결과가 없어요. 😢');
+                alert('결과가 없습니다.');
+            }
+        }
+
+        // 연관 장소 검색 기능 (카테고리 기반)
+        function searchRelated(place) {
+            // 해당 장소 주변(500m)의 동일 카테고리 혹은 추천 카테고리 검색
+            if(place.category_group_code) {
+                ps.categorySearch(place.category_group_code, function(data, status) {
+                    if (status === kakao.maps.services.Status.OK) {
+                        console.log("연관 장소 로드 완료");
+                        // 연관 장소는 마커만 추가하거나 리스트 하단에 작게 표시할 수 있음
+                    }
+                }, { location: new kakao.maps.LatLng(place.y, place.x), radius: 500 });
             }
         }
 
@@ -152,26 +154,52 @@
 
             for (let i = 0; i < places.length; i++) {
                 const placePosition = new kakao.maps.LatLng(places[i].y, places[i].x);
-                addMarker(placePosition);
+                const marker = addMarker(placePosition);
                 const itemEl = getListItem(i, places[i]);
 
                 bounds.extend(placePosition);
+
                 itemEl.onclick = function() {
                     map.panTo(placePosition);
+                    addClickMarker(placePosition); // 리스트 클릭 시에도 마커 강조
                 };
+
                 listEl.appendChild(itemEl);
             }
             map.setBounds(bounds);
         }
 
         function addMarker(position) {
-            const marker = new kakao.maps.Marker({ position: position });
+            const marker = new kakao.maps.Marker({
+                position: position,
+                image: markerImage // 모든 마커에 커스텀 이미지 적용
+            });
             marker.setMap(map);
             markers.push(marker);
             return marker;
         }
 
         function removeMarker() {
-            for (let i = 0; i < markers.length; i++) { markers[i].setMap(null); }
+            for (let i = 0; i < markers.length; i++) markers[i].setMap(null);
             markers = [];
         }
+
+        function getListItem(index, places) {
+            const el = document.createElement('li');
+            const categoryName = places.category_name.split(' > ').pop(); // 마지막 카테고리명만 추출
+            let itemStr = `
+                <div class="item">
+                    <h5>${places.place_name}</h5>
+                    <p>${places.road_address_name || places.address_name}</p>
+                    <span class="related-tag">#${categoryName}</span>
+                    <p style="color:#81c784; margin-top:5px; font-weight:bold;">${places.phone || ''}</p>
+                </div>
+            `;
+            el.innerHTML = itemStr;
+            return el;
+        }
+
+        initMap();
+    </script>
+</body>
+</html>
